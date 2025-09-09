@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>MySQL Monthly Articles</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background-color: #f0f0f0; }
+        a { text-decoration: none; color: #007bff; }
+        .pagination { margin-top: 20px; }
+        .pagination a { margin: 0 5px; text-decoration: none; color: #007bff; }
+        .pagination span { margin: 0 5px; font-weight: bold; }
+        form { margin-bottom: 20px; }
+        input[type="text"] { padding: 5px; width: 200px; }
+        input[type="submit"] { padding: 5px 10px; }
+        select { padding: 5px; }
+    </style>
+</head>
+<body>
+    <h1>MySQL Monthly Articles</h1>
+
+    <form method="get" action="/">
+        <input type="text" name="keyword" placeholder="搜索标题或标签" value="{{ keyword }}">
+        <select name="tag">
+            <option value="">所有标签</option>
+            {% for tag in all_tags %}
+                <option value="{{ tag }}" {% if selected_tag==tag %}selected{% endif %}>{{ tag }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="筛选">
+    </form>
+
+    <table>
+        <tr>
+            <th>标题</th>
+            <th>标签</th>
+            <th>作者</th>
+            <th>日期</th>
+            <th>链接</th>
+        </tr>
+        {% for article in articles %}
+        <tr>
+            <td>{{ article.title }}</td>
+            <td>{{ article.tag }}</td>
+            <td>{{ article.author }}</td>
+            <td>{{ article.create_date }}</td>
+            <td><a href="{{ article.url }}" target="_blank">查看文章</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div class="pagination">
+        {% if page > 1 %}
+            <a href="/?page={{ page-1 }}&keyword={{ keyword }}&tag={{ selected_tag }}">上一页</a>
+        {% endif %}
+        <span>第 {{ page }} 页 / 共 {{ total_pages }} 页</span>
+        {% if page < total_pages %}
+            <a href="/?page={{ page+1 }}&keyword={{ keyword }}&tag={{ selected_tag }}">下一页</a>
+        {% endif %}
+    </div>
+</body>
+</html>
